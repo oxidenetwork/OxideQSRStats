@@ -32,11 +32,11 @@ public class QSR_ShopPurchaseEvent implements Listener {
 
 		if (event.getShop().getShopType() == ShopType.SELLING) {
 			plugin.getDatabaseHelper().insertIntoSales(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, quantity, playerName, playerUUID, adminShop);
-			String message = String.format("%s bought %d %s for $ %d from %s", playerName, quantity, itemName, totalPrice, shopOwnerName);
+			String message = String.format("%s bought %s %s for $ %s from %s", playerName, String.valueOf(quantity), itemName, String.valueOf(totalPrice), shopOwnerName);
 			OxideQSRStats.info(message);
 		} else if (event.getShop().getShopType() == ShopType.BUYING) {
 			plugin.getDatabaseHelper().insertIntoPurchases(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, quantity, playerName, playerUUID, adminShop);
-			String message = String.format("%s sold %d %s for $ %d to %s", playerName, quantity, itemName, totalPrice, shopOwnerName);
+			String message = String.format("%s sold %s %s for $ %s to %s", playerName, String.valueOf(quantity), itemName, String.valueOf(totalPrice), shopOwnerName);
 			OxideQSRStats.info(message);
 		}
 	}
