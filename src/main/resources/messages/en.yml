@@ -1,0 +1,11 @@
+#
+#   This file has been inspired by the guys at DiscordSRV. They make a very awesome
+#   Discord plugin for Spigot that I recommend to everybody. Since I'm a beginner
+#   coder I learned a lot from their code. Copied a lot of the structure of DiscordSRV
+#   because it is so damm good.
+#
+#   You should totaly check them out at https://www.spigotmc.org/resources/discordsrv.18494/
+#   or their github https://github.com/Scarsz/DiscordSRV
+#
+
+NeedAtLeastOneMessage: "Yeah yeah yeah"
