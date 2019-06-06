@@ -1,0 +1,6 @@
+lib/
+target/
+.dbeaver-data-sources.xml
+.project
+.classpath
+.settings/

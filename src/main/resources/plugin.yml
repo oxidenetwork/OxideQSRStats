@@ -1,0 +1,7 @@
+name: ${name}
+main: ${package}.${mainclass}
+version: ${project.version}
+api-version: ${apiversion}
+author: ${developer}
+description: ${description}
+depend: [QuickShop]
