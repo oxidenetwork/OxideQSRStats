@@ -5,9 +5,22 @@
   <groupId>com.oxidenetwork</groupId>
   <artifactId>OxideQSRStats</artifactId>
   <version>0.0.2</version>
-  <name>OxideQSRStats</name>
+  <name>OxideQSRStats-Spigot</name>
   <description>A OxideNetwork QuickShop Reremake Economy Statistics</description>
 
+    <licenses>
+        <license>
+            <name>GPL v3 License</name>
+            <url>http://www.gnu.org/licenses/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <url>https://github.com/oxidenetwork/OxideQSRStats-Spigot/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+    
     <properties>
         <package>com.oxidenetwork.OxideQSRStats</package>
         <mainclass>OxideQSRStats</mainclass>
@@ -99,4 +112,9 @@
         </resources>
     </build>
 	
+    <organization>
+    	<name>OxideNetwork</name>
+    	<url>http://www.oxidenetwork.com</url>
+    </organization>
+    <url>https://github.com/oxidenetwork/OxideQSRStats-Spigot</url>
 </project>
