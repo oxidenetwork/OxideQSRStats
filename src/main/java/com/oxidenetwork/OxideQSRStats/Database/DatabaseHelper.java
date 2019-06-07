@@ -20,14 +20,17 @@ import com.oxidenetwork.OxideQSRStats.OxideQSRStats;
 public class DatabaseHelper {
     private Database database;
     private OxideQSRStats plugin;
-    private String dbPrefix;
-    private int dbTimeOut;
+    private String dbPrefix = "";
+    private int dbTimeOut = 10;
+    private boolean isDbMySQL = false;
 
     public DatabaseHelper(OxideQSRStats pl, Database db) throws SQLException {
         plugin = pl;
         database = db;
         dbPrefix = this.plugin.getDbPrefix();
         dbTimeOut = this.plugin.getDbTimeOut();
+        isDbMySQL = this.plugin.isDbMySQL();
+        
     	if (database.getConnection().isValid(dbTimeOut)) {
 	    	if (!database.hasTable(dbPrefix + "tb_Transactions")) {
 	    		createTransactionTable();
@@ -40,27 +43,46 @@ public class DatabaseHelper {
 
     public void createTransactionTable() throws SQLException {
     	if (database.getConnection().isValid(5)) {
-	    	Statement st = database.getConnection().createStatement();
+    		Statement st = database.getConnection().createStatement();
 	        String createTable = null;
 
-	        createTable = "CREATE TABLE " + dbPrefix + "`tb_Transactions` (" + 
-	        		"  `ID` INTEGER unsigned NOT NULL AUTO_INCREMENT," + 
-	        		"  `ShopOwnerName` text DEFAULT NULL," + 
-	        		"  `ShopOwnerUUID` text DEFAULT NULL," + 
-	        		"  `ItemName` text DEFAULT NULL," + 
-	        		"  `PiecePrice` double DEFAULT NULL," + 
-	        		"  `TotalPrice` double DEFAULT NULL," +
-	        		"  `TaxPrice` double DEFAULT NULL," +
-	        		"  `Tax` double DEFAULT NULL," +
-	        		"  `Quantity` INTEGER DEFAULT NULL," + 
-	        		"  `PlayerName` text DEFAULT NULL," + 
-	        		"  `PlayerUUID` text DEFAULT NULL," + 
-	        		"  `AdminShop` INTEGER DEFAULT NULL," +
-	        		"  `Action` TEXT DEFAULT NULL," + 
-	        		"  PRIMARY KEY (`ID`)," + 
-	        		"  KEY `" + dbPrefix + "tb_Transactions` (`ID`)" + 
-	        		");";
-	        st.execute(createTable);
+	        if (isDbMySQL) {
+		        createTable = "CREATE TABLE " + dbPrefix + "`tb_Transactions` (" + 
+		        		"  `ID` INTEGER unsigned NOT NULL AUTO_INCREMENT," + 
+		        		"  `ShopOwnerName` text DEFAULT NULL," + 
+		        		"  `ShopOwnerUUID` text DEFAULT NULL," + 
+		        		"  `ItemName` text DEFAULT NULL," + 
+		        		"  `PiecePrice` double DEFAULT NULL," + 
+		        		"  `TotalPrice` double DEFAULT NULL," +
+		        		"  `TaxPrice` double DEFAULT NULL," +
+		        		"  `Tax` double DEFAULT NULL," +
+		        		"  `Quantity` INTEGER DEFAULT NULL," + 
+		        		"  `PlayerName` text DEFAULT NULL," + 
+		        		"  `PlayerUUID` text DEFAULT NULL," + 
+		        		"  `AdminShop` INTEGER DEFAULT NULL," +
+		        		"  `Action` TEXT DEFAULT NULL," + 
+		        		"  PRIMARY KEY (`ID`)," + 
+		        		"  KEY `" + dbPrefix + "tb_Transactions` (`ID`)" + 
+		        		");";
+		        st.execute(createTable);
+	        } else {
+		        createTable = "CREATE TABLE `" + dbPrefix + "tb_Transactions` (" + 
+		        		"    ID 			INTEGER PRIMARY KEY AUTOINCREMENT" + 
+		        		"  , ShopOwnerName 	TEXT" + 
+		        		"  , ShopOwnerUUID 	TEXT" + 
+		        		"  , ItemName 		TEXT" + 
+		        		"  , PiecePrice 	DOUBLE" + 
+		        		"  , TotalPrice 	DOUBLE" + 
+		        		"  , TaxPrice 		DOUBLE" + 
+		        		"  , Tax 			DOUBLE" + 
+		        		"  , Quantity 		INTEGER" + 
+		        		"  , PlayerName 	TEXT" + 
+		        		"  , PlayerUUID 	TEXT" + 
+		        		"  , AdminShop 		INTEGER" + 
+		        		"  , Action 		TEXT" + 
+		        		");";	        	
+		        st.execute(createTable);
+	        }
     	} else {
     		OxideQSRStats.error("createTransactionTable - Database connection is not valid.");
     	}

@@ -26,7 +26,6 @@ import com.oxidenetwork.OxideQSRStats.Utils.*;
 
 import lombok.Getter;
 
-@SuppressWarnings("unused")
 public class OxideQSRStats extends JavaPlugin {
     public static boolean isReady = false;
     public static String version = "";
@@ -36,6 +35,7 @@ public class OxideQSRStats extends JavaPlugin {
     @Getter Database database;
     @Getter String dbPrefix; 
     @Getter int dbTimeOut;
+    @Getter boolean isDbMySQL;
 
     @Getter private File configFile = new File(getDataFolder(), "config.yml");
     @Getter private File messagesFile = new File(getDataFolder(), "messages.yml");
@@ -104,6 +104,7 @@ public class OxideQSRStats extends JavaPlugin {
         }
         dbPrefix = getConfig().getString("DatabasePrefix");
         dbTimeOut = getConfig().getInt("DatabaseTimeOut");
+        isDbMySQL = getConfig().getBoolean("DatabaseMySQL");
         OxideQSRStats.info("Loaded Config Version: " + getConfig().getString("ConfigVersion"));
 	}
 	
