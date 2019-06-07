@@ -4,7 +4,7 @@
   <groupId>com.oxidenetwork</groupId>
   <artifactId>OxideQSRStats</artifactId>
   <name>OxideQSRStats-Spigot</name>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <description>A OxideNetwork QuickShop Reremake Economy Statistics</description>
   <url>https://github.com/oxidenetwork/OxideQSRStats-Spigot</url>
   <issueManagement>

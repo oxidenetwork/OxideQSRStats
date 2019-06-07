@@ -29,106 +29,76 @@ public class DatabaseHelper {
         dbPrefix = this.plugin.getDbPrefix();
         dbTimeOut = this.plugin.getDbTimeOut();
     	if (database.getConnection().isValid(dbTimeOut)) {
-	    	if (!database.hasTable(dbPrefix + "tb_Sales")) {
-	    		createSalesTable();
-	    	}
-	    	if (!database.hasTable(dbPrefix + "tb_Purchases")) {
-	    		createPurchaseTable();
+	    	if (!database.hasTable(dbPrefix + "tb_Transactions")) {
+	    		createTransactionTable();
+	    		OxideQSRStats.debug(dbPrefix + "tb_Transactions created in database.");
 	    	}
     	} else {
     		OxideQSRStats.error("Database connection is not valid.");
     	}
     }
 
-    public void createSalesTable() throws SQLException {
+    public void createTransactionTable() throws SQLException {
     	if (database.getConnection().isValid(5)) {
 	    	Statement st = database.getConnection().createStatement();
 	        String createTable = null;
-	        createTable = "CREATE TABLE " + dbPrefix + "tb_Sales (" +
-	        		"ID INTEGER,"+
-	        		"ShopOwnerName TEXT,"+
-	        		"ShopOwnerUUID TEXT,"+
-	        		"ItemName TEXT,"+
-	        		"PricePiece REAL,"+
-	        		"TotalPayed REAL,"+
-	        		"QuantityBought INTEGER,"+
-	        		"BuyerName TEXT,"+
-	        		"BuyerUUID INTEGER,"+
-	        		"AdminShop INTEGER"+
-	        	");"+
-	        	"CREATE INDEX " + dbPrefix + "tb_Sales_ID_IDX ON " + dbPrefix + "tb_Sales (ID);";
+
+	        createTable = "CREATE TABLE " + dbPrefix + "`tb_Transactions` (" + 
+	        		"  `ID` INTEGER unsigned NOT NULL AUTO_INCREMENT," + 
+	        		"  `ShopOwnerName` text DEFAULT NULL," + 
+	        		"  `ShopOwnerUUID` text DEFAULT NULL," + 
+	        		"  `ItemName` text DEFAULT NULL," + 
+	        		"  `PiecePrice` double DEFAULT NULL," + 
+	        		"  `TotalPrice` double DEFAULT NULL," +
+	        		"  `TaxPrice` double DEFAULT NULL," +
+	        		"  `Tax` double DEFAULT NULL," +
+	        		"  `Quantity` INTEGER DEFAULT NULL," + 
+	        		"  `PlayerName` text DEFAULT NULL," + 
+	        		"  `PlayerUUID` text DEFAULT NULL," + 
+	        		"  `AdminShop` INTEGER DEFAULT NULL," +
+	        		"  `Action` TEXT DEFAULT NULL," + 
+	        		"  PRIMARY KEY (`ID`)," + 
+	        		"  KEY `" + dbPrefix + "tb_Transactions` (`ID`)" + 
+	        		");";
 	        st.execute(createTable);
     	} else {
-    		OxideQSRStats.error("createSalesTable - Database connection is not valid.");
+    		OxideQSRStats.error("createTransactionTable - Database connection is not valid.");
     	}
     }
 
-    public void insertIntoSales(String shopOwnerName, UUID shopOwnerUUID, String itemName, double pricePiece, double totalPayed, int quantityBought, String buyerName, UUID buyerUUID, boolean adminShop) {
+    public void insertIntoTransactions(String shopOwnerName, UUID shopOwnerUUID, String itemName, double piecePrice, double totalPrice, double taxPrice, double tax, int quantity, String playerName, UUID playerUUID, boolean adminShop, String action) {
         try {
-            String sqlString = "INSERT INTO " + dbPrefix + "tb_Sales (ShopOwnerName,ShopOwnerUUID,ItemName,PricePiece,TotalPayed,QuantityBought,BuyerName,BuyerUUID,AdminShop) VALUES (?,?,?,?,?,?,?,?,?);";
+            String sqlString = "INSERT INTO " + dbPrefix + "tb_Transactions "
+            		+ "(ShopOwnerName, ShopOwnerUUID, ItemName,"
+            		+ "PiecePrice, TotalPrice, TaxPrice, Tax,"
+            		+ "Quantity, PlayerName, PlayerUUID,"
+            		+ "AdminShop, Action) "
+            		+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
             PreparedStatement ps = database.getConnection().prepareStatement(sqlString);
             ps.setString(1, shopOwnerName);
             ps.setString(2, shopOwnerUUID.toString());
             ps.setString(3, itemName);
-            ps.setDouble(4, pricePiece);
-            ps.setDouble(5, totalPayed);
-            ps.setInt(6, quantityBought);
-            ps.setString(7, buyerName);
-            ps.setString(8, buyerUUID.toString());
-            ps.setBoolean(9, adminShop);
+            ps.setDouble(4, piecePrice);
+            ps.setDouble(5, totalPrice);
+            ps.setDouble(6, taxPrice);
+            ps.setDouble(7, tax);
+            ps.setInt(8, quantity);
+            ps.setString(9, playerName);
+            ps.setString(10, playerUUID.toString());
+            ps.setBoolean(11, adminShop);
+            ps.setString(12, action);
             plugin.getDatabaseManager().add(ps);
+            OxideQSRStats.debug("New transaction added to database");
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
     }
-
-    public void createPurchaseTable() throws SQLException {
-    	if (database.getConnection().isValid(5)) {
-	    	Statement st = database.getConnection().createStatement();
-	        String createTable = null;
-	        createTable = "CREATE TABLE " + dbPrefix + "tb_Purchases (" +
-	        		"ID INTEGER,"+
-	        		"ShopOwnerName TEXT,"+
-	        		"ShopOwnerUUID TEXT,"+
-	        		"ItemName TEXT,"+
-	        		"PricePiece REAL,"+
-	        		"TotalPayed REAL,"+
-	        		"QuantitySold INTEGER,"+
-	        		"SellerName TEXT,"+
-	        		"SelletUUID INTEGER,"+
-	        		"AdminShop INTEGER"+
-	        	");"+
-	        	"CREATE INDEX " + dbPrefix + "tb_Purchases_ID_IDX ON " + dbPrefix + "tb_Purchases (ID);";
-	        st.execute(createTable);
-    	} else {
-    		OxideQSRStats.error("createSalesTable - Database connection is not valid.");
-    	}
-    }    
-    
-    public void insertIntoPurchases(String shopOwnerName, UUID shopOwnerUUID, String itemName, double pricePiece, double totalPayed, int quantitySold, String sellerName, UUID sellerUUID, boolean adminShop) {
-        try {
-            String sqlString = "INSERT INTO " + dbPrefix + "tb_Purchases (ShopOwnerName,ShopOwnerUUID,ItemName,PricePiece,TotalPayed,QuantitySold,SellerName,SellerUUID,AdminShop) VALUES (?,?,?,?,?,?,?,?,?);";
-            PreparedStatement ps = database.getConnection().prepareStatement(sqlString);
-            ps.setString(1, shopOwnerName);
-            ps.setString(2, shopOwnerUUID.toString());
-            ps.setString(3, itemName);
-            ps.setDouble(4, pricePiece);
-            ps.setDouble(5, totalPayed);
-            ps.setInt(6, quantitySold);
-            ps.setString(7, sellerName);
-            ps.setString(8, sellerUUID.toString());
-            ps.setBoolean(9, adminShop);
-            plugin.getDatabaseManager().add(ps);
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        }
-    }   
-    
+   
  
     public ResultSet selectAllSales() throws SQLException {
     	if (database.getConnection().isValid(dbTimeOut)) {
 	    	Statement st = database.getConnection().createStatement();
-	        String selectAllSales = "SELECT * FROM " + dbPrefix + "tb_Sales";
+	        String selectAllSales = "SELECT * FROM " + dbPrefix + "tb_Transactions WHERE `action`='SALE'";
 	        return st.executeQuery(selectAllSales);
     	} else {
     		OxideQSRStats.error("selectAllSales - Database connection is not valid.");
@@ -139,7 +109,7 @@ public class DatabaseHelper {
     public ResultSet selectAllPurchases() throws SQLException {
     	if (database.getConnection().isValid(dbTimeOut)) {
 	    	Statement st = database.getConnection().createStatement();
-	        String selectAllPurchases = "SELECT * FROM " + dbPrefix + "tb_Purchases";
+	        String selectAllPurchases = "SELECT * FROM " + dbPrefix + "tb_Transactions WHERE `action`='BUY'";
 	        return st.executeQuery(selectAllPurchases);
     	} else {
     		OxideQSRStats.error("selectAllPurchases - Database connection is not valid.");
