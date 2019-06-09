@@ -1,12 +1,12 @@
 package com.oxidenetwork.OxideQSRStats.Listeners;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.maxgamer.quickshop.QuickShop;
-import org.maxgamer.quickshop.Event.ShopPurchaseEvent;
 import org.maxgamer.quickshop.Event.ShopSuccessPurchaseEvent;
 import org.maxgamer.quickshop.Shop.Shop;
 import org.maxgamer.quickshop.Shop.ShopType;
@@ -19,22 +19,6 @@ public class QSR_ShopSuccessPurchaseEvent implements Listener {
 	public QSR_ShopSuccessPurchaseEvent(OxideQSRStats pl) {
 		OxideQSRStats.debug("QSR_ShopSuccessPurchaseEvent Registered");
 	}
-	
-	/*
-	 *  Old one just for testing
-	 */
-	@EventHandler
-	public void onShopPurchaseEvent(ShopPurchaseEvent event) {
-		OxideQSRStats.debug("ShopPurchaseEvent fired");
-		if (!event.isCancelled()) { // only save it when the event is not cancelled
-			//Shop s = event.getShop();
-			//Player p = event.getPlayer();
-            //double taxed = 100;
-			//registerPurchase(s, p, event.getAmount(), taxed);
-		} else {
-			OxideQSRStats.debug("There was a purchase event, but it was set to chanceled");
-		}
-	}	
 	
 	@EventHandler
 	public void onShopSuccessPurchaseEvent(ShopSuccessPurchaseEvent event) {
@@ -61,12 +45,16 @@ public class QSR_ShopSuccessPurchaseEvent implements Listener {
 		String playerName = p.getName();
 		UUID playerUUID = p.getUniqueId();
 		boolean adminShop = s.isUnlimited();
-		
+
 		double tax = QuickShop.instance.getConfig().getDouble("tax");
 		if (s.getOwner().equals(playerUUID)) {
             taxed = 0;
         }
 
+		// Round the total price to two decimals
+		totalPrice = Math.round(totalPrice * 100) / 100.00d;
+		taxed = Math.round(taxed * 100) / 100.00d;
+		
 		if (s.getShopType() == ShopType.SELLING) {
 			OxideQSRStats.instance.getDatabaseHelper().insertIntoTransactions(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, taxed, tax, quantity, playerName, playerUUID, adminShop, "SELLING");
 			String message = String.format("%s bought %s %s for $ %s from %s", playerName, String.valueOf(quantity), itemName, String.valueOf(totalPrice), shopOwnerName);
