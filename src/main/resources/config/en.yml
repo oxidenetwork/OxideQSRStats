@@ -1,5 +1,8 @@
 # Don't touch pls
-ConfigVersion: ${project.version}
+ConfigVersion: "${project.version}"
+
+# Just for information
+MinimumQuickShopVersion: "v2.0.0" 
 
 # Debug options, don't touch unless needed
 #
