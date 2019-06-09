@@ -4,7 +4,7 @@
   <groupId>com.oxidenetwork</groupId>
   <artifactId>OxideQSRStats</artifactId>
   <name>OxideQSRStats-Spigot</name>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <description>A OxideNetwork QuickShop Reremake Economy Statistics</description>
   <url>https://github.com/oxidenetwork/OxideQSRStats-Spigot</url>
   <issueManagement>
@@ -61,6 +61,10 @@
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -92,13 +96,6 @@
       <artifactId>lombok</artifactId>
       <version>1.18.8</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.maxgamer</groupId>
-      <artifactId>quickshop</artifactId>
-      <version>1.4.4.13</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/QuickShop-Reremake.1.4.4.13.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

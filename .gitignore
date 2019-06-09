@@ -1,6 +1,9 @@
 lib/
-target/
 .dbeaver-data-sources.xml
 .project
 .classpath
 .settings/
+target/classes/
+target/maven-status/
+target/original*.jar
+target/maven-archiver/

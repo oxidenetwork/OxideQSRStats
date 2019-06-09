@@ -21,7 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oxidenetwork.OxideQSRStats.Database.*;
 import com.oxidenetwork.OxideQSRStats.Database.Database.ConnectionException;
-import com.oxidenetwork.OxideQSRStats.Listeners.QSR_ShopPurchaseEvent;
+import com.oxidenetwork.OxideQSRStats.Listeners.QSR_ShopCreateEvent;
+import com.oxidenetwork.OxideQSRStats.Listeners.QSR_ShopSuccessPurchaseEvent;
 import com.oxidenetwork.OxideQSRStats.Utils.*;
 
 import lombok.Getter;
@@ -56,7 +57,10 @@ public class OxideQSRStats extends JavaPlugin {
     
 	@Override
     public void onEnable() {
-        version = getDescription().getVersion();
+        
+		registerEvents();
+
+		version = getDescription().getVersion();
         Thread initThread = new Thread(this::init, "OxideQSRStats-Thread");
         initThread.setUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
@@ -70,12 +74,12 @@ public class OxideQSRStats extends JavaPlugin {
 		setupDatabase();
 		databaseManager = new DatabaseManager(this, database);
 		getLogger().info("I'm done loading.");
-		registerEvents();
 	}
 	
 	public void registerEvents() {
 		PluginManager pm = Bukkit.getServer().getPluginManager();
-		pm.registerEvents(new QSR_ShopPurchaseEvent(this), this);
+		pm.registerEvents(new QSR_ShopSuccessPurchaseEvent(this), this);
+		pm.registerEvents(new QSR_ShopCreateEvent(this), this);
 		OxideQSRStats.debug("Events Registered");
 	}
 

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.oxidenetwork</groupId>
   <artifactId>OxideQSRStats</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <name>OxideQSRStats-Spigot</name>
   <description>A OxideNetwork QuickShop Reremake Economy Statistics</description>
 
@@ -35,26 +35,30 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+				    <id>jitpack.io</id>
+				    <url>https://jitpack.io</url>
+				</repository>
     </repositories>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.14.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+		    <groupId>org.spigotmc</groupId>
+		    <artifactId>spigot-api</artifactId>
+		    <version>1.14.2-R0.1-SNAPSHOT</version>
+		    <scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.github.zafarkhaja</groupId>
-            <artifactId>java-semver</artifactId>
-            <version>0.9.0</version>
-        </dependency>
+		<dependency>
+		    <groupId>com.github.zafarkhaja</groupId>
+		    <artifactId>java-semver</artifactId>
+		    <version>0.9.0</version>
+		</dependency>
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
@@ -65,13 +69,11 @@
 		    <artifactId>commons-io</artifactId>
 		    <version>2.6</version>
 		</dependency>
-        <dependency>
-            <groupId>org.maxgamer</groupId>
-            <artifactId>quickshop</artifactId>
-            <version>1.4.4.13</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/QuickShop-Reremake.1.4.4.13.jar</systemPath>
-        </dependency>	
+		<dependency>
+		    <groupId>com.github.Ghost-chu</groupId>
+		    <artifactId>QuickShop-Reremake</artifactId>
+		    <version>v2.0.0</version>
+		</dependency>
 	</dependencies>
 	
     <build>
