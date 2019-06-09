@@ -29,7 +29,7 @@ import lombok.Getter;
 
 public class OxideQSRStats extends JavaPlugin {
     public static boolean isReady = false;
-    public static String version = "";
+    @Getter static String version = "";
     public static OxideQSRStats instance;
 	@Getter DatabaseManager databaseManager;
     @Getter DatabaseHelper databaseHelper;
@@ -57,10 +57,9 @@ public class OxideQSRStats extends JavaPlugin {
     
 	@Override
     public void onEnable() {
-        
+		version = getDescription().getVersion();
 		registerEvents();
 
-		version = getDescription().getVersion();
         Thread initThread = new Thread(this::init, "OxideQSRStats-Thread");
         initThread.setUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
@@ -188,5 +187,5 @@ public class OxideQSRStats extends JavaPlugin {
                 .forEach(stackTrace::add);
         return String.join("\n", stackTrace);
     }
-	
+
 }
