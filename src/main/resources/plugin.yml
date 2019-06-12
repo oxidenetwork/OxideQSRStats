@@ -5,3 +5,7 @@ api-version: ${apiversion}
 author: ${developer}
 description: ${description}
 depend: [QuickShop]
+commands:
+  oxqs:
+    description: Main command. See /oxqs help for more information
+    usage: /oxqs 

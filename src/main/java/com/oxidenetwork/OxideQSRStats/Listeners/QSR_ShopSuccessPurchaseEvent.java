@@ -1,6 +1,5 @@
 package com.oxidenetwork.OxideQSRStats.Listeners;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -56,11 +55,11 @@ public class QSR_ShopSuccessPurchaseEvent implements Listener {
 		taxed = Math.round(taxed * 100) / 100.00d;
 		
 		if (s.getShopType() == ShopType.SELLING) {
-			OxideQSRStats.instance.getDatabaseHelper().insertIntoTransactions(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, taxed, tax, quantity, playerName, playerUUID, adminShop, "SELLING");
+			OxideQSRStats.getDatabaseHelper().insertIntoTransactions(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, taxed, tax, quantity, playerName, playerUUID, adminShop, "SELLING");
 			String message = String.format("%s bought %s %s for $ %s from %s", playerName, String.valueOf(quantity), itemName, String.valueOf(totalPrice), shopOwnerName);
 			OxideQSRStats.info(message);
 		} else if (s.getShopType() == ShopType.BUYING) {
-			OxideQSRStats.instance.getDatabaseHelper().insertIntoTransactions(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, taxed, tax, quantity, playerName, playerUUID, adminShop, "BUYING");
+			OxideQSRStats.getDatabaseHelper().insertIntoTransactions(shopOwnerName, shopOwnerUUID, itemName, pricePiece, totalPrice, taxed, tax, quantity, playerName, playerUUID, adminShop, "BUYING");
 			String message = String.format("%s sold %s %s for $ %s to %s", playerName, String.valueOf(quantity), itemName, String.valueOf(totalPrice), shopOwnerName);
 			OxideQSRStats.info(message);
 		}		
