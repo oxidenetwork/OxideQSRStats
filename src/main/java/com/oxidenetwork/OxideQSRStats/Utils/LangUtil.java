@@ -55,7 +55,21 @@ public class LangUtil {
         	put(Language.EN, "Language file loaded");
         }}), INVALID_CONFIG(new HashMap<Language, String>() {{ 
         	put(Language.EN, "Invalid Config files");
+        }}), INVALID_DATABASE_CONNECTION(new HashMap<Language, String>() {{ 
+        	put(Language.EN, "setupDatabase - Database connection is not valid!");
+        }}), ERROR_DATABASE_CONNECTION(new HashMap<Language, String>() {{ 
+        	put(Language.EN, "Error connecting to database!");
+        }}), ERROR_DATABASE_SETUP(new HashMap<Language, String>() {{ 
+        	put(Language.EN, "Error setting up database!");
+        }}), CONFIG_RELOAD(new HashMap<Language, String>() {{ 
+        	put(Language.EN, "OxideQSRStats Config Reloaded.");
+        }}), CONFIG_SAVED(new HashMap<Language, String>() {{ 
+        	put(Language.EN, "Config file saved");
         }});
+    	
+    	
+    	
+    	
     	
         @Getter private final Map<Language, String> definitions;
         InternalMessage(Map<Language, String> definitions) {
@@ -76,7 +90,19 @@ public class LangUtil {
 
     public enum Message {
 
-    	NEEDATLEASTONEMESSAGE("NeedAtLeastOneMessage", true);
+    	NOT_INGAME_PLAYER("NotIngamePlayer", true),
+    	OUT_OF_STOCK_FOR_PLAYER("OutOfStockForPlayer", true),
+    	SHOP_ALL_STOCKED_FOR_PLAYER("ShopAllStockedForPlayer", true),
+    	PLAYER_HAS_NO_SHOP("PlayerHasNoShops", true),
+    	NO_COMMAND_PERMISSION("NoCommandPermission", true),
+    	HELP_COMMAND("HelpCommand", true),
+    	HELP_EMPTY_COMMAND("HelpEmptyCommand", true),
+    	HELP_RELOAD_COMMAND("HelpReloadCommand", true),
+    	HELP_SAVE_COMMAND("HelpSaveCommand", true),
+    	HELP_DEBUG_COMMAND("HelpDebugCommand", true),
+    	HELP_VERSION_COMMAND("HelpVersionCommand", true),
+    	CURRENT_VERSION("CurrentVersion", true),
+    	CHATHEADER_VERSION_INFORMATION("ChatHeaderVersionInformation", true);
 
         @Getter private final String keyName;
         @Getter private final boolean translateColors;

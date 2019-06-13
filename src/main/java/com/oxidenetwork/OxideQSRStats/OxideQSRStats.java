@@ -149,16 +149,16 @@ public class OxideQSRStats extends JavaPlugin {
 	            // Make the database up to date
 	            databaseHelper = new DatabaseHelper(this, database);
             } else {
-            	OxideQSRStats.error("setupDatabase - Database connection is not valid!");
+            	OxideQSRStats.error(LangUtil.InternalMessage.INVALID_DATABASE_CONNECTION);
             }
         } catch (ConnectionException e) {
             e.printStackTrace();
-            OxideQSRStats.error("Error connecting to database.");
+            OxideQSRStats.error(LangUtil.InternalMessage.ERROR_DATABASE_CONNECTION);
             return false;
         } catch (SQLException e) {
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
-            OxideQSRStats.error("Error setting up database.");
+            OxideQSRStats.error(LangUtil.InternalMessage.ERROR_DATABASE_SETUP);
             return false;
         }
         return true;
@@ -170,7 +170,7 @@ public class OxideQSRStats extends JavaPlugin {
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					reloadConfig();
-					sendChatMessage(sender, ChatColor.YELLOW + "OxideQSRStats Config Reloaded");
+					sendChatMessage(sender, ChatColor.YELLOW + "" + LangUtil.InternalMessage.CONFIG_RELOAD);
 					return true;
 				} else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
 					sendHelp(sender);
@@ -180,7 +180,7 @@ public class OxideQSRStats extends JavaPlugin {
 						sendNoPermission(sender);
 						return false;
 					}
-					sendChatMessage(sender, "Config file saved");
+					sendChatMessage(sender, "" + LangUtil.InternalMessage.CONFIG_SAVED);
 					saveConfig();
 					return true;
 				} else if (args[0].equalsIgnoreCase("debug")) {
@@ -199,114 +199,142 @@ public class OxideQSRStats extends JavaPlugin {
 							      }
 							   };
 							   runnable.runTaskLater(this, 1L);
-						
+						return true;
 					} else {
-						sendChatMessage(sender, ChatColor.RED + "Sorry, you need to be a ingame player.");
+						sendChatMessage(sender, ChatColor.RED + "" + LangUtil.Message.NOT_INGAME_PLAYER);
+						return false;
 					}
+				} else if (args[0].equalsIgnoreCase("version")) {
+					sendVersionInfo(sender);
+					return true;
 				}
 			} else {
 				sendHelp(sender);
-				return true;
+				return false;
 			}
 		}
-		sendHelp(sender);
-		return true;
+		return false;
 	}
 
+    public void sendVersionInfo(CommandSender sender) {
+    	sendChatHeader(sender, "" + LangUtil.Message.CHATHEADER_VERSION_INFORMATION);
+    	sendChatMessage(sender, ChatColor.YELLOW + "" + LangUtil.Message.CURRENT_VERSION + Bukkit.getPluginManager().getPlugin("OxideQSRStats-Spigot").getDescription().getVersion());
+    	sendChatMessage(sender, ChatColor.YELLOW + "" + Bukkit.getPluginManager().getPlugin("OxideQSRStats-Spigot").getDescription().getDescription());
+    	sendChatMessage(sender, ChatColor.YELLOW + "QuickShop Version: " + Bukkit.getPluginManager().getPlugin("QuickShop").getDescription().getVersion());
+    }
+    
     public void getOutofStockShopsForPlayer(Player sender) {
-		List<Shop> playerShops = new ArrayList<Shop>();
+		boolean hasShops = false;
+    	List<Shop> playerShops = new ArrayList<Shop>();
 		Iterator<Shop> shops = QuickShop.instance.getShopManager().getShopIterator();
 		for (Iterator<Shop> iter = shops; iter.hasNext(); ) {
 		    Shop s = iter.next();
 		    Player p = (Player) sender;
 		    
-		    if (s.getOwner() == p.getUniqueId()) {
-		    	if (s.getRemainingStock() <= 0) {
+		    if (s.getOwner().compareTo(p.getUniqueId()) == 0) {
+		    	if (s.getRemainingStock() < 1) {
 		    		playerShops.add(s);
 		    	}
+	    		hasShops = true;
 		    }
 		}
 		
-		if (playerShops.size() > 0) {
-			sendChatMessage(sender, ChatColor.GREEN + "The following shop(s) from you are out of stock: ");
-			for (int i = 0; i < playerShops.size(); i++) {
-				
-				sendChatMessage(sender, ChatColor.BLUE + MsgUtil.getItemi18n(playerShops.get(i).getItem().getType().name()) + ChatColor.GREEN + 
-						" at X:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockX() + ChatColor.GREEN +
-						" Y:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockY() + ChatColor.GREEN +
-						" Z:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockZ());
+		if (hasShops) {
+			if (playerShops.size() > 0) {
+				sendChatMessage(sender, ChatColor.GREEN + "" + LangUtil.Message.OUT_OF_STOCK_FOR_PLAYER + ChatColor.RESET);
+				for (int i = 0; i < playerShops.size(); i++) {
+					
+					sendChatMessage(sender, ChatColor.AQUA + MsgUtil.getItemi18n(playerShops.get(i).getItem().getType().name()) + ChatColor.GREEN + 
+							" -> X:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockX() + ChatColor.GREEN +
+							" Y:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockY() + ChatColor.GREEN +
+							" Z:" + ChatColor.YELLOW + playerShops.get(i).getLocation().getBlockZ() + ChatColor.RESET);
+				}
+			} else {
+				sendChatMessage(sender, ChatColor.GREEN + "" + LangUtil.Message.SHOP_ALL_STOCKED_FOR_PLAYER + ChatColor.RESET);
+				return;
 			}
+		} else {
+			sendChatMessage(sender, ChatColor.GREEN + "" + LangUtil.Message.PLAYER_HAS_NO_SHOP + ChatColor.RESET);
+			return;
 		}
     }
     
     public void setDebugLevelCommand(CommandSender sender, String[] args) {
 		if (args.length == 2) {
 			if (args[1].equalsIgnoreCase("0")) {
-				getConfig().set("DebugLevel", 0);
+				OxideQSRStats.instance.getConfig().set("DebugLevel", 0);
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level set to " + ChatColor.GREEN + "0 (OFF)");
 			} else if (args[1].equalsIgnoreCase("1")) {
-				getConfig().set("DebugLevel", 1);
+				OxideQSRStats.instance.getConfig().set("DebugLevel", 1);
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level set to " + ChatColor.YELLOW + "1 (BASIC)");
 			} else if (args[1].equalsIgnoreCase("2")) {
-				getConfig().set("DebugLevel", 2);
+				OxideQSRStats.instance.getConfig().set("DebugLevel", 2);
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level set to " + ChatColor.RED + "2 (FULL)");
 			} else {
 				sendChatMessage(sender, ChatColor.RED + "Set to 0 (OFF), 1 (BASIC) or 2 (FULL). Example: /" + baseCommand + " debug 0");
 			}
 		} else {
-			if (getConfig().getInt("DebugLevel") == 0) {
+			if (OxideQSRStats.instance.getConfig().getInt("DebugLevel") == 0) {
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level is currently " + ChatColor.GREEN + "0 (OFF)" + ChatColor.WHITE + ". Use /" + baseCommand + " debug 1 to turn it on.");
-			} else if (getConfig().getInt("DebugLevel") == 0) {
+			} else if (OxideQSRStats.instance.getConfig().getInt("DebugLevel") == 1) {
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level is currently " + ChatColor.YELLOW + "1 (BASIC)" + ChatColor.WHITE + ". Use /" + baseCommand + " debug 0 to turn it off.");
-			} else {
+			} else if (OxideQSRStats.instance.getConfig().getInt("DebugLevel") == 2){
 				sendChatMessage(sender, ChatColor.WHITE + "Debug level is currently " + ChatColor.RED + "2 (FULL)" + ChatColor.WHITE + ". Use /" + baseCommand + " debug 0 to turn it off.");
+			} else {
+				sendChatMessage(sender, "Well this is awkward");
 			}
 		}
     }
     
     public void sendNoPermission(CommandSender sender) {
-		sendChatMessage(sender, ChatColor.RED + "You don't have permission for this command.");
+		sendChatMessage(sender, ChatColor.RED + "" + LangUtil.Message.NO_COMMAND_PERMISSION);
     }
     
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		if (command.getName().equalsIgnoreCase("oxlp")) {
+		if (command.getName().equalsIgnoreCase(baseCommand)) {
 			List<String> l = new ArrayList<>();
-			if (sender.hasPermission("oxlp.admin")) {
+
+			if (args.length == 1 ) {
+				l.add("?");
+				l.add("help");
 				l.add("empty");
-			
-				if (args.length == 1) {
+
+				if (sender.hasPermission("oxlp.admin")) {
 					l.add("reload");
-					l.add("help");
-					l.add("?");
 					l.add("save");
 					l.add("debug");
-				} else if (args.length == 2) {
+					l.add("version");
+				}
+			} else {
+				if (args[0].equalsIgnoreCase("debug")) {
 					l.add("0");
 					l.add("1");
 					l.add("2");
 				}
-				return l;
-				}
 			}
+			return l;
+		}
 		return null;
 	}
 	
 	public void sendHelp(CommandSender sender) {
 		sendChatHeader(sender, "Command Help");
 		sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "?" + ChatColor.RESET
-				+ ChatColor.WHITE + " Shows this help.");
+				+ ChatColor.WHITE + " " + LangUtil.Message.HELP_COMMAND);
 		sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "help"
-				+ ChatColor.RESET + ChatColor.WHITE + " Shows this help.");
+				+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_COMMAND);
 		sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "empty"
-				+ ChatColor.RESET + ChatColor.WHITE + " Shows all your shops that are out of stock.");
+				+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_EMPTY_COMMAND);
 		
 		if (sender.hasPermission("oxqs.admin")) {
 			sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "reload"
-					+ ChatColor.RESET + ChatColor.WHITE + " Reloads the plugins config. Does not reconnect database!");
+					+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_RELOAD_COMMAND);
 			sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "save"
-					+ ChatColor.RESET + ChatColor.WHITE + " Save the plugin data to the config.");
+					+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_SAVE_COMMAND);
 			sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "debug"
-					+ ChatColor.RESET + ChatColor.WHITE + " Enable or disable debug mode. Set to 0 (OFF), 1 (BASIC) or 2 (FULL).");
+					+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_DEBUG_COMMAND);
+			sender.sendMessage(ChatColor.ITALIC + "" + ChatColor.YELLOW + "/" + baseCommand + " " + ChatColor.GREEN + "version"
+					+ ChatColor.RESET + ChatColor.WHITE + " " + LangUtil.Message.HELP_VERSION_COMMAND);
 		}
 	}
 
@@ -321,7 +349,6 @@ public class OxideQSRStats extends JavaPlugin {
 		}
 	}
     
-    // log messages. Thank you DiscordSRV this works really well
     public static void info(LangUtil.InternalMessage message) {
         info(message.toString());
     }
@@ -352,7 +379,7 @@ public class OxideQSRStats extends JavaPlugin {
         List<String> stackTrace = new LinkedList<>();
         stackTrace.add("Stack trace @ debug call (THIS IS NOT AN ERROR)");
         Arrays.stream(ExceptionUtils.getStackTrace(new Throwable()).split("\n"))
-                .filter(s -> s.toLowerCase().contains("oxidediscordapi"))
+                .filter(s -> s.toLowerCase().contains("oxideqsrstats"))
                 .filter(s -> !s.contains("DebugUtil.getStackTrace"))
                 .forEach(stackTrace::add);
         return String.join("\n", stackTrace);

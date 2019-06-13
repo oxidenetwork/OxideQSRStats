@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.oxidenetwork</groupId>
   <artifactId>OxideQSRStats</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <name>OxideQSRStats-Spigot</name>
-  <description>A OxideNetwork QuickShop Reremake Economy Statistics</description>
+  <description>A OxideNetwork Extension Plugin for QuickShop Reremake</description>
 
     <licenses>
         <license>

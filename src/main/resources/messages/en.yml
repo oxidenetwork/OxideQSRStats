@@ -8,4 +8,17 @@
 #   or their github https://github.com/Scarsz/DiscordSRV
 #
 
-NeedAtLeastOneMessage: "Yeah yeah yeah"
+NotIngamePlayer: "Sorry, you need to be a ingame player."
+OutOfStockForPlayer: "The following shop(s) from you are out of stock: "
+ShopAllStockedForPlayer: "All your shop(s) are stocked"
+PlayerHasNoShops: "You don't have any shops yet."
+NoCommandPermission: "You don't have permission for this command."
+CurrentVersion: "Current version is: "
+ChatHeaderVersionInformation: "Version Information"
+
+HelpCommand: "Shows this help."
+HelpEmptyCommand: "Shows all your shops that are out of stock."
+HelpReloadCommand: "Reloads the plugins config. Does not reconnect database!"
+HelpSaveCommand: "Save the plugin data to the config."
+HelpDebugCommand: "Enable or disable debug mode. Set to 0 (OFF), 1 (BASIC) or 2 (FULL)."
+HelpVersionCommand: "Shows version information"
